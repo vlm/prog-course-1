@@ -143,7 +143,7 @@ function fname1(arg1, arg2) {
 оригинальные данные идентичны данным, которые возвращает функция «клонирования».
 
 3. **Задание со звёздочкой**: сделайте так, чтобы программа продолжала работать
-корректно, даже если в начале программы поставить `Object.foo="bar";`. Используйте [hasOwnProperty](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/hasOwnProperty).
+корректно, даже если в начале программы поставить `Object.prototype.foo="bar";`. Используйте [hasOwnProperty](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object/hasOwnProperty).
 
 4. Переименуйте (`git mv`) `index.html` от старого задания в `test-1.html`, и создайте новый `test-2.html`, в котором будет содержаться результат (или несколько результатов) выполнения предыдущих пунктов. Закиньте оба файла на гитхаб.
 
