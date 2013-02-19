@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cloning DOM Element</title>
+<style>
+.cloneable {    // What does this "." mean?
+    float: left;
+    border: solid 1px #ccc;
+    padding: 5px;
+}
+body {
+    font-family: sans-serif;
+}
+input[type="radio"] {   // What is this stuff in brackets?
+    margin-right: 10px;
+}
+</style>
+</head>
+<body>
+
+    <article>   <!-- ← What is that? -->
+
+        <div id="elementToClone" class="cloneable">
+            <h3>Input form header</h3>
+            <input type="radio" option="checked">&larr; Button<br>
+            <textarea rows="3" cols="20">Text area</textarea><br>
+            <select>
+            <option value="optOne">Option 1
+            <option value="optTwo">Option 2
+            <option value="optThree">Option 3
+            </select>
+        </div>
+
+    </article>
+
+</body>
+</html>
