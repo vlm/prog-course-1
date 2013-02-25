@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Working with jQuery</title>
+<style>
+.cloneable {
+    float: left;
+    opacity: 0.9;
+    background-color: #fff;
+    border: solid 1px #ccc;
+    padding: 5px;
+    margin: 5px;
+}
+.container {
+    margin: 10px;
+    float: left;
+    border: solid 1px #222;
+    border-radius: 5px;
+    min-height: 100px;
+    min-width: 100px;
+}
+.from { background-color: #faa; }
+.to { background-color: #afa; }
+</style>
+</head>
+<body>
+
+    <div class="cloneable container from">
+        <div class="cloneable" id="1">
+            <h3>First form</h3>
+            <textarea rows="3" cols="20">Text area</textarea><br>
+        </div>
+        <div class="cloneable" id="2">
+            <h3>Second form</h3>
+            <textarea rows="3" cols="20">Text area</textarea><br>
+        </div>
+    </div>
+
+    <div class="cloneable container to">
+    </div>
+
+<script>
+
+    $("#1")
+    $("#2")
+    $(".cloneable")
+    $("div")
+    $("div > div")
+
+</script>
+
+</body>
+</html>
