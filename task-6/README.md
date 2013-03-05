@@ -342,7 +342,7 @@ console.log(window)
 объект `{}`, и `this` внутри функции будет показывать уже именно на него.
 Попробуйте в `node`:
  ```javascript
-var f = function() { return this; };
+var f = function() { };
 console.log({ "a": "this is an object", "f": f }.f());
 console.log(new f());
  ```
@@ -354,7 +354,7 @@ console.log(new f());
  Попробуйте в `node`:
  ```javascript
 var fooProto = { "foo": "prototype!" };
-var f = function() { return this; };
+var f = function() { };
 (new f()).foo   // Выведет undefined
 f.prototype = fooProto;
 (new f()).foo   // Выведет "prototype!"
@@ -369,7 +369,6 @@ function createPerson(first, last, born) {
     this.firstName   = first;
     this.lastName    = last;
     this.yearOfBirth = born;
-    return this;
 }
 
 createPerson.prototype = {
@@ -391,8 +390,7 @@ console.log(p.computeAge(2013));
 Обратите внимание на следующие аспекты:
 
 * мы вызываем `new createPerson` вместо `createPerson`;
-* мы устанавливаем прототипный объект один раз извне функции, чтобы не конструировать функции каждый раз при вызове createPerson;
-* мы не забываем возвращать this из createPerson.
+* мы устанавливаем прототипный объект один раз извне функции, чтобы не конструировать функции каждый раз при вызове createPerson.
 
 В принципе, можно не менять целиком объект, на который указывает `createPerson.prototype`, а просто по-отдельности установить ему нужные поля. Эту идиому тоже
 можно встретить в промышленном JavaScript-коде:
@@ -424,7 +422,6 @@ function createPerson(first, last, born) {
     this.firstName   = first;
     this.lastName    = last;
     this.yearOfBirth = born;
-    return this;
 }
  ```
 
@@ -443,7 +440,7 @@ function createPerson(first, last, born) {
     var person = { firstName:   first,
                    lastName:    last,
                    yearOfBirth: born });
-    return $.extend(this, person);
+    $.extend(this, person);
 }
 ```
 
@@ -454,7 +451,7 @@ function createPerson(first, last, born) {
 
 ```javascript
 function createPerson(person) {
-    return $.extend(this, person);
+    $.extend(this, person);
 }
 
 var p = new createPerson({ firstName: "Anne",
@@ -471,7 +468,7 @@ console.log(p);
 
 ```javascript
 function Person(person) {
-    return $.extend(this, person);
+    $.extend(this, person);
 }
 
 Person.prototype.computeAge = function(currentYear) {
