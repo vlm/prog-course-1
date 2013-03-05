@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head><title>Working with objects and state</title></head>
+<head><title>Working with objects and state</title>
 <style>
 .example-box {
     border-radius: 7px;
@@ -65,6 +65,7 @@ pre {
     font-size: 14px;
 }
 </style>
+</head>
 <body>
 
 <article class="centered">
@@ -118,11 +119,11 @@ function replaceNumber(div, newNumber) {
  * Set the CSS property in a way compatible with many browsers.
  */
 function setBrowserIndependentProperty(div, property, value) {
-    div.style["transform"] = value;
-    div.style["-ms-transform"] = value;
-    div.style["-o-transform"] = value;
-    div.style["-moz-transform"] = value;
-    div.style["-webkit-transform"] = value;
+    div.style[property] = value;
+    div.style["-ms-" + property] = value;
+    div.style["-o-" + property] = value;
+    div.style["-moz-" + property] = value;
+    div.style["-webkit-" + property] = value;
 }
 
 /*
