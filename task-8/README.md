@@ -80,7 +80,7 @@ console.log(  rocket1.get("fuelType")   );
 Опишем модель ресторана с разумными умолчаниями.
 
 ```javascript
-var Restaurant = Backbone.Model.extend({
+var RestaurantModel = Backbone.Model.extend({
                     defaults: {
                         openAt: 9,      // Рабочее время обычно с 9
                         closeAt: 22     // ...до 10.
@@ -96,7 +96,7 @@ Backbone.Model.extend кроме defaults принимает ещё нескол
 одним из его атрибутов было текущее количество человек в ресторане.
 
 ```javascript
-var Restaurant = Backbone.Model.extend({
+var RestaurantModel = Backbone.Model.extend({
                     defaults: { openAt: 9, closeAt: 22 },
 
                     initialize: function() {
@@ -115,7 +115,7 @@ var Restaurant = Backbone.Model.extend({
 `.set(..., {validate:true})`.
 
 ```javascript
-var Restaurant = Backbone.Model.extend({
+var RestaurantModel = Backbone.Model.extend({
                     defaults: { openAt: 9, closeAt: 22,
                                 currentOccupancy: 0 },
 
@@ -125,7 +125,7 @@ var Restaurant = Backbone.Model.extend({
                     }
             });
 
-var r = new Restaurant();
+var r = new RestaurantModel();
 r.set({"currentOccupancy": 4}, {validate: true});
 console.log(r.get("currentOccupancy"));      // Выведет единичку.
 r.set({"currentOccupancy": -4}, {validate: true});
@@ -181,13 +181,13 @@ visitors.add(v1);
 считать количество посетителей в своём помещении, но и умел хранить
 самих этих посетителей.
 
-То есть, нам нужно сделать модель Restaurant, одним атрибутом которой
+То есть, нам нужно сделать модель RestaurantModel, одним атрибутом которой
 является коллекция VisitorsList, которая может хранить множество
 посетителей, представленных моделью Visitor.
 
 Модель, в которой есть Коллекция, в которой есть Модели.
 
-Restaurant, в котором есть VisitorsList, в котором есть много Visitor.
+RestaurantModel, в котором есть VisitorsList, в котором есть много Visitor.
 
 Кроме того, сделаем так, чтобы визитор мог чекинится в Foursquare как только
 попадёт в ресторан. Это лучше всего сделать, навесив коллбэк на событие
@@ -203,8 +203,8 @@ visitors.on("add", function(visitor) {
 
 Подробнее в файле [model-collection-model.html](model-collection-model.html).
 
-Ещё заметьте, что мы уже не создаём модель Restaurant как прямого потомка
-Backbone.Model, а делаем потомка от [GenericRestaurant](my/generic-restaurant-model.js).
+Ещё заметьте, что мы уже не создаём модель RestaurantModel как прямого потомка
+Backbone.Model, а делаем потомка от [GenericRestaurantModel](my/generic-restaurant-model.js).
 Что нам даёт такое непрямое наследование? Мы можем определить
 общие функции для всех типов ресторанов, затем иметь возможность создавать
 рестораны Грузинской, Армянской, Эльфийской кухни.
@@ -213,7 +213,7 @@ Backbone.Model, а делаем потомка от [GenericRestaurant](my/gener
 но продолжаем пользоваться старыми определениями этих функций.
 Мы добавляем новую функциональность по ведению коллекции посетителей, не
 удаляя старой функциональности по ведению счётчика `currentOccupancy`,
-которая была определена в GenericRestaurant.
+которая была определена в GenericRestaurantModel.
 
 #### Задание на понимание сущности модели
 
@@ -244,36 +244,20 @@ _.template("<div><%= foo %></div>", { foo: "Здесь рыбы нет!" });
 ## Backbone.View
 
 Представления (Views, вьюхи) — это способ отобразить модель. В Backbone.JS
-это практически всегда значит использование HTML-шаблонов вместе с атрибутами
-модели, которые с помощью этого шаблона будут отображаться.
+это практически всегда значит использование модели, которая отображается
+с помощью каких-то HTML-шаблонов.
 
-```javascript
-var RestaurantView = Backbone.View.extend({
-
-  // Создаст this.el представляющий собой пустой DOM-элемент <div></div>.
-  tagName: "div",
-
-  initialize: function() {
-    this.render();
-  },
-
-  // Обновить this.el новым содержимым.
-  render: function() {
-    this.$el.html(_.template("<b><%- message %></b>", { message: "Hello!" }));
-    return this;
-  }
-});
-```
-
-В файле [simple-view.html](simple-view.html) мы создаём простую вьюху, не привязанную
+В файле [simple-view.html](simple-view.html) мы создаём простую вьюху,
+не привязанную
 ни к какой модели. Вьюха автоматически создаёт сама себе пустой DOM-элемент
 `this.el` из атрибутов `tagName` и `className`.
 Далее мы в функции `.initialize()` заменяем содержимое
 этого элемента несколькими разными способами. Это почти самый простой пример
-использования Views.
+использования View.
 
-В файле [model-view.html](model-view.html) мы пристёгиваем модель Restaurant к
-RestaurantView. RestaurantView связана с моделью: HTML-шаблонизатор будет использовать
+В файле [model-view.html](model-view.html) мы пристёгиваем модель
+RestaurantModel к вьюхе RestaurantView.
+RestaurantView связана с моделью: HTML-шаблонизатор будет использовать
 атрибуты модели, а также вьюха будет реагировать на любые изменения любых атрибутов
 внутри модели, вызывая `.render()` и перегенерируя кусок HTML.
 
@@ -283,7 +267,7 @@ RestaurantView. RestaurantView связана с моделью: HTML-шабло
 соответствующий метод модели (`.closeRestaurant()`), который в итоге приведёт к
 вызову коллбека опять внутри вьюхи, что вызовет `.render()`, который и перерисует HTML.
 
-Мы видим, что RestaurantView занимается «общением с DOM'ом», абстрагируя модель Restaurant
+Мы видим, что RestaurantView занимается «общением с DOM'ом», абстрагируя модель RestaurantModel
 от какого-либо знания о том, как происходит отображение ресторана на экране.
 Отрисовка изменений в модели идёт через коллбек, приводящий к `.render()`.
 Вьюха также реагирует на события, передавая модели интерпретацию того, что хотел

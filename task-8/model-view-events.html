@@ -53,13 +53,13 @@ var RestaurantView = Backbone.View.extend({
   }
 });
 
-var Restaurant = GenericRestaurant.extend();
-var restaurant = new Restaurant({ name: "Ошибка сапёра" });
+var RestaurantModel = GenericRestaurantModel.extend();
+var restModel = new RestaurantModel({ name: "Ошибка сапёра" });
 
-var rv = new RestaurantView({ model: restaurant });
+var restView = new RestaurantView({ model: restModel });
 
 
-$("body").append(rv.el);
+$("body").append(restView.el);
 
 </script>
 

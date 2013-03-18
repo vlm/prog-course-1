@@ -40,13 +40,13 @@ var Visitor = Backbone.Model.extend({
 var VisitorsList = Backbone.Collection.extend({ model: Visitor });
 
 /*
- * Теперь отпочковываемся от GenericRestaurant, делаем свой собственный
+ * Теперь отпочковываемся от GenericRestaurantModel, делаем свой собственный
  * ресторан, который умеет не только запоминать, сколько посетителей
  * в нём сидит, но и хранить конкретных посетителей.
- * GenericRestaurant описан в my/generic-restaurant-model.js
+ * GenericRestaurantModel описан в my/generic-restaurant-model.js
  */
 
-var Restaurant = GenericRestaurant.extend({
+var RestaurantModel = GenericRestaurantModel.extend({
             initialize: function() {
                 /*
                  * Сделаем в модели ресторана коллекцию посетителей.
@@ -69,7 +69,7 @@ var Restaurant = GenericRestaurant.extend({
                 // Два раза в один и тот же ресторан не войти.
                 if(!this.get("visitors").get(visitor)) {
                     // Наследуем старое поведение
-                    GenericRestaurant.prototype.visitorCame.call(this);
+                    GenericRestaurantModel.prototype.visitorCame.call(this);
                     // Но также добавляем и новое:
                     this.get("visitors").add(visitor);
                 }
@@ -80,7 +80,7 @@ var Restaurant = GenericRestaurant.extend({
                 var v = visitors.get(visitor);
                 if(v) {
                     this.get("visitors").remove(visitor);
-                    GenericRestaurant.prototype.visitorLeft.call(this);
+                    GenericRestaurantModel.prototype.visitorLeft.call(this);
                 } else {
                     return false;
                 }
@@ -88,7 +88,7 @@ var Restaurant = GenericRestaurant.extend({
         });
 
 // Создать конкретный ресторан и конкретного посетителя.
-var r = new Restaurant({ restaurantName: "У Озера" });
+var r = new RestaurantModel({ restaurantName: "У Озера" });
 var v = new Visitor({ firstName: "Онуфрий", title: "Отец" });
 
 /*

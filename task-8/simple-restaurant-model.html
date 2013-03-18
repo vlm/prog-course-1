@@ -16,7 +16,7 @@
 <script>
 
 // Создадим шаблон/класс/тип Ресторана — создавалку новых ресторанов.
-var Restaurant = Backbone.Model.extend({
+var RestaurantModel = Backbone.Model.extend({
 
     // Обычный сферический ресторан в вакууме обладает такими свойствами:
     defaults: {
@@ -86,15 +86,15 @@ var Restaurant = Backbone.Model.extend({
  * которые нам интересны. Например, нам сейчас может быть не интересен цвет
  * пола у ресторана, хотя реальный ресторан этим свойством обладает.
  */
-var r1 = new Restaurant();  // Ресторан с дефолтными свойствами
-var r2 = new Restaurant({   // Большой 24-часовой ресторан
-            openAt: 0,      // Мы можем переписать все
-            closeAt: 24,    // или только часть атрибутов
+var r1 = new RestaurantModel(); // Ресторан с дефолтными свойствами
+var r2 = new RestaurantModel({  // Большой 24-часовой ресторан
+            openAt: 0,          // Мы можем переписать все
+            closeAt: 24,        // или только часть атрибутов
             maxOccupancy: 150,
             name: "Копытце",    // ... и, конечно, задать новые.
             menu: ["egg", "sausage", "milk"]
             });
-var r3 = new Restaurant({ name: "Усталый маршрутчик" });
+var r3 = new RestaurantModel({ name: "Усталый маршрутчик" });
 
 /*
  * Попробуйте в консоли:

@@ -1,4 +1,4 @@
-var GenericRestaurant = Backbone.Model.extend({
+var GenericRestaurantModel = Backbone.Model.extend({
 
     defaults: {
         state: "open",
