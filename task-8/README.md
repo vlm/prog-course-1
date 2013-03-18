@@ -127,9 +127,9 @@ var RestaurantModel = Backbone.Model.extend({
 
 var r = new RestaurantModel();
 r.set({"currentOccupancy": 4}, {validate: true});
-console.log(r.get("currentOccupancy"));      // Выведет единичку.
+console.log(r.get("currentOccupancy"));      // Выведет 4.
 r.set({"currentOccupancy": -4}, {validate: true});
-console.log(r.get("currentOccupancy"));      // Выведет тоже единичку.
+console.log(r.get("currentOccupancy"));      // Тоже выведет 4.
 ```
 
 Мы устанавливаем атрибуты модели через `.set()` не только потому, что
