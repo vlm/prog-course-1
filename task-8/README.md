@@ -261,7 +261,6 @@ var RestaurantView = Backbone.View.extend({
   render: function() {
     this.$el.html(_.template("<b><%- message %></b>", { message: "Hello!" }));
     return this;
-    
   }
 });
 ```
