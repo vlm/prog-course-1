@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+<script src="js/underscore-1.4.4.js"></script>
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/json2.js"></script>
+<script src="js/backbone-0.9.10.js"></script>
+
+<script src="my/generic-restaurant-model.js"></script>
+<style>
+</style>
+</head>
+<body>
+
+<h2>Backbone's Model containing a Collection and another Model</h2>
+<div>Тут ничего не должно быть; смотрите в код и в консоль браузера.</div>
+
+<script>
+
+/*
+ * Посетитель может занимать место в ресторане.
+ * Он умеет чекиниться в Foursquare и фотографировать еду.
+ */
+var Visitor = Backbone.Model.extend({
+                    defaults: { lastFoursquareCheckin: "" },
+
+                    checkin: function(venue) {
+                        this.set("lastFoursquareCheckin", venue);
+                        if(this.get("title")) {
+                            console.log("Visitor “"
+                                        + this.get("title") + " "
+                                        + this.get("firstName")
+                                        + "” checked in at “"
+                                        + venue + "”");
+                        }
+                    }
+                });
+
+// Создаём простую коллекцию посетителей.
+var VisitorsList = Backbone.Collection.extend({ model: Visitor });
+
+/*
+ * Теперь отпочковываемся от GenericRestaurant, делаем свой собственный
+ * ресторан, который умеет не только запоминать, сколько посетителей
+ * в нём сидит, но и хранить конкретных посетителей.
+ * GenericRestaurant описан в my/generic-restaurant-model.js
+ */
+
+var Restaurant = GenericRestaurant.extend({
+            initialize: function() {
+                /*
+                 * Сделаем в модели ресторана коллекцию посетителей.
+                 * this.attributes.visitors = new VisitorsList();
+                 * Но лучше так:
+                 */
+                var visitors = new VisitorsList;
+                this.set("visitors", visitors);
+
+                /*
+                 * Кстати, давайте обновлять Foursquare-чекин посетителя,
+                 * как только он появляется в коллекции:
+                 */
+                visitors.on("add", function(visitor) {
+                    visitor.checkin(this.get("restaurantName"));
+                }, this);
+            },
+
+            visitorCame: function(visitor) {
+                // Два раза в один и тот же ресторан не войти.
+                if(!this.get("visitors").get(visitor)) {
+                    // Наследуем старое поведение
+                    GenericRestaurant.prototype.visitorCame.call(this);
+                    // Но также добавляем и новое:
+                    this.get("visitors").add(visitor);
+                }
+            },
+
+            visitorLeft: function(visitor) {
+                var visitors = this.get("visitors");
+                var v = visitors.get(visitor);
+                if(v) {
+                    this.get("visitors").remove(visitor);
+                    GenericRestaurant.prototype.visitorLeft.call(this);
+                } else {
+                    return false;
+                }
+            }
+        });
+
+// Создать конкретный ресторан и конкретного посетителя.
+var r = new Restaurant({ restaurantName: "У Озера" });
+var v = new Visitor({ firstName: "Онуфрий", title: "Отец" });
+
+/*
+ * Попробуйте в консоли:
+ * r.visitorCame(v);
+ * r.get("currentOccupancy");
+ * r.visitorLeft(v);
+ * r.get("currentOccupancy");
+ * r.visitorLeft(v);   // Что произойдёт?
+ */
+
+/*
+ * Также попробуйте в консоли:
+ * 
+ * r.visitorCame({ firstName: "Poupkine" })
+ * r.attributes.visitors.models
+ * r.attributes.currentOccupancy
+ * r.get("currentOccupancy");
+ * r.get("visitors").models;
+ */
+
+/*
+ * Ну и, на закуску, посмотрим, что хранится в ресторане:
+ * r.visitorCame(v);
+ * JSON.stringify(r.toJSON())
+ */
+
+</script>
+
+</body>
+</html>
