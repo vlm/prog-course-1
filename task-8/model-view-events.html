@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+<script src="js/underscore-1.4.4.js"></script>
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/json2.js"></script>
+<script src="js/backbone-0.9.10.js"></script>
+<script src="my/generic-restaurant-model.js"></script>
+<style>
+.restaurantClass {
+    width: 300px;
+    height: 50px;
+    border: solid 1px darkred;
+    background-color: #faa;
+    padding: 10px;
+}
+</style>
+</head>
+<body>
+
+<script id="restaurant-message" type="text/underscore-template">
+Restaurant “<%- name %>” is <b><%- state %></b>.
+Попробуйте кликнуть мышкой здесь.
+</script>
+
+<h2>Backbone's View</h2>
+
+<script>
+
+var RestaurantView = Backbone.View.extend({
+  className: "restaurantClass",
+
+  // Кэшируем шаблон, данный нам в известном script-блоке.
+  tmpl: _.template($("#restaurant-message").html()),
+
+  events: {
+    "click": "do_close"
+  },
+    
+  initialize: function() {
+    this.listenTo(this.model, "change", this.render);
+    this.render();
+  },
+
+  // обновить this.el новым содержимым.
+  render: function() {
+    this.$el.html(this.tmpl(this.model.attributes));
+    return this;    // Рекомендуется.
+  },
+
+  do_close: function() {
+    this.model.closeRestaurant();
+  }
+});
+
+var Restaurant = GenericRestaurant.extend();
+var restaurant = new Restaurant({ name: "Ошибка сапёра" });
+
+var rv = new RestaurantView({ model: restaurant });
+
+
+$("body").append(rv.el);
+
+</script>
+
+</body>
+</html>

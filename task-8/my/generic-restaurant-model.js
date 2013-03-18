@@ -30,6 +30,10 @@ var GenericRestaurant = Backbone.Model.extend({
                         {validate: true});
     },
 
+    openRestaurant: function() {
+        this.set("state", "open");
+    },
+
     closeRestaurant: function() {
         if(this.get("state") == "open") {
             if(this.get("currentOccupancy") == 0)
@@ -38,5 +42,6 @@ var GenericRestaurant = Backbone.Model.extend({
                 throw "Can't close restaurant which still has visitors!";
         }
     }
+
 });
 

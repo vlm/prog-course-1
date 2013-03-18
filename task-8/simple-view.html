@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+<script src="js/underscore-1.4.4.js"></script>
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/json2.js"></script>
+<script src="js/backbone-0.9.10.js"></script>
+<style>
+.restaurantClass {
+    width: 100px;
+    height: 50px;
+    border: solid 1px darkred;
+    background-color: #faa;
+    padding: 10px;
+}
+</style>
+</head>
+<body>
+
+<h2>Backbone's View</h2>
+
+<script>
+
+var RestaurantView = Backbone.View.extend({
+
+  // this.el будет <div class="restaurantClass"> ... </div>
+  tagName: "div",
+  className: "restaurantClass",
+
+  initialize: function() {
+    this.render();
+  },
+
+  // обновить this.el новым содержимым.
+  render: function() {
+    var tmpl = _.template("<b><%- message %></b>");
+    var attributes = { message: "Hello, world!" };
+
+    // Можно так:
+    this.el.innerHTML = tmpl(attributes);
+    // или так:
+    $(this.el).html(tmpl(attributes));
+    // или так:
+    this.$el.html(tmpl(attributes));
+
+    return this;
+  }
+
+});
+
+var rv = new RestaurantView();
+$("body").append(rv.el);
+
+</script>
+
+</body>
+</html>
