@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+<script src="js/underscore-1.4.4.js"></script>
+<style>
+</style>
+</head>
+<body>
+
+<h2>Underscore templates</h2>
+<div>Тут ничего не должно быть; смотрите в код и в консоль браузера.</div>
+
+<script id="template1" type="text/underscore-template">
+    <div><%- name %></div>
+</script>
+
+<script>
+
+/*
+ * Несколько способов использовать шаблоны для порождения HTML.
+ */
+
+/*
+ * Способ первый: использовать шаблоны прямо в строках HTML.
+ */
+
+// Вариант первый:
+var t1 = _.template("<div></div>");
+var s = t1();
+console.log("Первый вариант: " + s);
+
+// Вариант второй:
+var t1 = _.template("<div><%= foo %></div>");
+var s = t1({ foo: "<b>bar</b>" });
+console.log("Второй вариант: " + s);
+
+// Вариант третий, с защитой от хакеров:
+var t1 = _.template("<div><%- foo %></div>");
+var s = t1({ foo: "<b>bar</b>" });
+console.log("Третий вариант: " + s);
+
+/*
+ * Способ второй: хранить шаблон прямо в HTML, под видом скрипта с
+ * нестандартным типом.
+ */
+var t1 = _.template(document.getElementById("template1").innerHTML);
+var s = t1({ foo: "bar", name: "Poupkine" });
+console.log("Вытаскиваем из script>template1</script: " + s);
+
+</script>
+
+</body>
+</html>
