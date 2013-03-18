@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+<script src="js/underscore-1.4.4.js"></script>
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/json2.js"></script>
+<script src="js/backbone-0.9.10.js"></script>
+<style>
+</style>
+</head>
+<body>
+
+<h2>Backbone's Collection and Model</h2>
+<div>Тут ничего не должно быть; смотрите в код и в консоль браузера.</div>
+
+<script>
+
+/*
+ * Новая модель — посетитель. Он может занимать место в ресторане.
+ * Когда он куда-нибудь приходит, он чекинится в Foursquare.
+ */
+var Visitor = Backbone.Model.extend({
+                    defaults: { lastFoursquareCheckin: "" }
+                });
+
+
+/*
+ * Посетителей может быть много. Давайте хранить посетителей
+ * не в простом списке, а в Коллекциях. Это будет удобно в дальнейшем.
+ */
+var VisitorsList = Backbone.Collection.extend({});
+
+
+/*
+ * Итак, создадим одну коллекцию посетителей и добавим туда нескольких
+ * посетителей.
+ */
+var v1 = new Visitor();
+var v2 = new Visitor({ lastFoursquareCheckin: "Moscow" });
+var v3 = new Visitor({ firstName: "Жерар", lastName: "Депардье" });
+
+var visitors = new VisitorsList();
+visitors.add(v1);
+visitors.add([v2, v3]);
+
+/*
+ * Кстати, если мы укажем у при создании VisitorsList атрибут 'model':Visitor,
+ * либо просто проставим его у коллекции visitors,
+ * мы сможем добавлять не объекты Visitor, а просто наборы атрибутов, которые
+ * самостоятельно превратятся в Visitors уже внутри коллекции:
+ */
+visitors.model = Visitor;
+visitors.add({ firstName: "Yet another visitor" })
+console.log(visitors.toJSON());
+
+</script>
+
+</body>
+</html>
