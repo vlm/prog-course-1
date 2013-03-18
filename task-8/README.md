@@ -247,6 +247,25 @@ _.template("<div><%= foo %></div>", { foo: "Здесь рыбы нет!" });
 это практически всегда значит использование HTML-шаблонов вместе с атрибутами
 модели, которые с помощью этого шаблона будут отображаться.
 
+```javascript
+var RestaurantView = Backbone.View.extend({
+
+  // Создаст this.el представляющий собой пустой DOM-элемент <div></div>.
+  tagName: "div",
+
+  initialize: function() {
+    this.render();
+  },
+
+  // Обновить this.el новым содержимым.
+  render: function() {
+    this.$el.html(_.template("<b><%- message %></b>", { message: "Hello!" }));
+    return this;
+    
+  }
+});
+```
+
 В файле [simple-view.html](simple-view.html) мы создаём простую вьюху, не привязанную
 ни к какой модели. Вьюха автоматически создаёт сама себе пустой DOM-элемент
 `this.el` из атрибутов `tagName` и `className`.
