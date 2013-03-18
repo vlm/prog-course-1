@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+<script src="js/underscore-1.4.4.js"></script>
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/json2.js"></script>
+<script src="js/backbone-0.9.10.js"></script>
+<style>
+</style>
+</head>
+<body>
+
+<h2>Model</h2>
+<div>Тут ничего не должно быть; смотрите в код и в консоль браузера.</div>
+
+<script>
+
+// Создадим шаблон/класс/тип Ресторана — создавалку новых ресторанов.
+var Restaurant = Backbone.Model.extend({
+
+    // Обычный сферический ресторан в вакууме обладает такими свойствами:
+    defaults: {
+        openAt: 9,       // Рабочее время обычно с 9
+        closeAt: 22,        // ...до 10.
+        maxOccupancy: 42    // Максимальное количество одновременных посетителей
+    },
+
+    /*
+     * После того, как мы создаём конкретный ресторан, мы инициализируем
+     * дополнительные свойства, может быть на основе атрибутов, данных нам
+     * в конструкторе конкретного ресторана.
+     */
+    initialize: function() {
+        // Задаём начальное значения для «текущего количества посетителей».
+        this.set("currentOccupancy", 0);
+
+        // initialize - Это способ задать некоторые зависящие
+        // от параметров конструктора атрибуты, например, сколько часов
+        // в день ресторан работает.
+        this.set("hoursOpen", this.get("closeAt") - this.get("openAt"));
+    },
+
+    /*
+     * Для проверки непротиворечивости свойств ресторана.
+     * Этот коллбек вызывается на .save() и на .set() с опцией {validate:true}.
+     */
+    validate: function(attributes) {
+        if(attributes.openAt >= attributes.closeAt)
+            return "Restaurant must open earlier than it closes";
+
+        if(attributes.currentOccupancy > attributes.maxOccupancy)
+            return "Too many occupants arrived";
+
+        if(attributes.currentOccupancy < 0)
+            return "Can't remove visitor";
+    },
+
+    /*
+     * Методы, которые ресторан даёт пользователям модели.
+     */
+
+    // Ресторану сообщается, когда посетитель пришёл.
+    visitorCame: function() {
+        /*
+         * Не рекомендуется так (does not fire events):
+         * this.attributes.currentOccupancy++;
+         *
+         * Рекомендуется, потому что будут вызваны обработчики,
+         * будет вызвана функция валидации модели validate():
+         */
+        return this.set({currentOccupancy: this.get("currentOccupancy") + 1 },
+                        {validate: true});
+    },
+
+    // Посетитель ушёл.
+    visitorLeft: function() {
+        return this.set({currentOccupancy: this.get("currentOccupancy") - 1 },
+                        {validate: true});
+    }
+});
+
+/* 
+ * Создадим пару ресторанов.
+ * r1 и r2 — это две «модели» ресторана. Модель, в смысле что это не
+ * реальный ресторан, а некое упрощение, обладающее только теми свойствами,
+ * которые нам интересны. Например, нам сейчас может быть не интересен цвет
+ * пола у ресторана, хотя реальный ресторан этим свойством обладает.
+ */
+var r1 = new Restaurant();  // Ресторан с дефолтными свойствами
+var r2 = new Restaurant({   // Большой 24-часовой ресторан
+            openAt: 0,
+            closeAt: 24,
+            maxOccupancy: 150
+            });
+
+/*
+ * Попробуйте в консоли:
+ *
+ * r2.visitorCame();   // currentOccupancy будет единичкой.
+ * r2.visitorLeft();   // currentOccupancy должно уйти в ноль.
+ * r2.visitorLeft();   // А теперь? Попробуйте в консоли.
+ * 
+ * Отметьте, что при этом вызываются наши функции-коллбеки ниже:
+ */
+
+/* 
+ * Сделаем так, чтобы каждый раз, когда меняется количество посетителей,
+ * вызывалась наша функция.
+ * Навесить коллбек можно с помощью .on(), .bind(), .listenTo().
+ * Это либо совсем синонимы, типа .on() и .bind(), либо функции с чуть другими
+ * свойствами.
+ * Мы можем навесить коллбек на изменение какого-то конкретного атрибута,
+ * либо на изменение любого атрибута. Варианты:
+ * "change"
+ * "change:ATTRIBUTE"
+ * "change:ATTRIBUTE1 change:ATTRIBUTE2"
+ * и так далее.
+ * На что ещё можно навесить коллбек: http://backbonejs.org/#Events-catalog
+ */
+r2.on("change:currentOccupancy", function() {
+    console.log('r2.on("change:currentOccupancy") => ', arguments);
+    console.log(this.get("currentOccupancy") + " is a new current occupancy");
+});
+
+r2.on("change", function() {
+    console.log('r2.on("change") => ', arguments);
+    console.log(this.get("currentOccupancy") + " is a new current occupancy");
+});
+
+</script>
+
+</body>
+</html>
