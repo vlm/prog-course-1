@@ -79,7 +79,7 @@ var RestaurantModel = GenericRestaurantModel.extend({
                 var visitors = this.get("visitors");
                 var v = visitors.get(visitor);
                 if(v) {
-                    visitors.remove(visitor);
+                    visitors.remove(v);
                     GenericRestaurantModel.prototype.visitorLeft.call(this);
                 } else {
                     return false;
